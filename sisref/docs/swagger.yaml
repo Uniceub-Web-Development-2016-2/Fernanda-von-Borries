@@ -1,0 +1,314 @@
+swagger: '2.0'
+
+######################### API INFORMATION ###############################
+info:
+  version: "1.0.0"
+  title: SIREF - Sistema de Receitas Familiar API
+  description: This is the first version of the Family Recipes System API. This document provides a description of what services this API offers and how to make a good use of those services.
+  
+ ###########################################################################                Host, Base Path, Schemes and Content Types               
+############################################################################
+host: localhost
+basePath: /Applications/MAMP/htdocs
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+###########################################################################                                Tags                 
+############################################################################
+tags:
+  - name: Users
+    description: |
+      Users can include recipes, update and search for them acording predetermined categories. 
+
+  - name: Admin
+    description: |
+     Administrator has full access to the system. He/She can manage the whole system, including users and tables.
+
+  - name: Categories
+
+
+###########################################################################                                Parameters                
+###########################################################################
+
+parameters:
+  user-id:
+    name: user_id
+    in: path
+    description: user identification 
+    type: integer
+    required: true
+    
+  recipe-id:
+    name: recipe_id
+    in: path
+    description: Recipe Identification
+    type: integer
+    required: true  
+    
+  admin-id:
+    name: admin_id
+    in: path
+    description: Adminstrator identification 
+    type: integer
+    required: true
+    
+###########################################################################                                Paths           
+###########################################################################
+
+paths:
+  /recipes:
+    post:
+      summary: Include a new Recipe.
+      tags:
+        - Recipes
+        - Users
+        - Admin
+      parameters:
+        - in: body
+          name: recipe
+          description: Recipe object that will be added.
+          required: true
+          schema:
+            $ref: '#/definitions/Recipes'
+      responses:
+        '200':
+          description: Successful
+          schema:
+            $ref: '#/definitions/Recipes'
+
+    get:
+      summary: Returns all recipes from the system.
+      tags:
+        - Recipes
+        - Admin
+        - Users
+      parameters:
+        - name: categories
+          in: query
+          description: filter
+          required: false
+          type: array
+          items:
+            type: string
+        - name: limit
+          in: query
+          description: maximum number of results
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Sucessfull
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Recipes'
+              
+            
+  /recipes/{recipe_id}:
+    get:
+      summary: |
+        Returns a Recipe based on a single ID.
+      parameters:
+        - $ref: '#/parameters/recipe-id'
+      tags:
+        - Recipes
+        - Users
+        - Admin
+      responses:
+        200:
+          description: Successful
+          schema:
+            title: ArrayOfRecipes
+            type: object
+            properties:
+                data:
+                  $ref: '#/definitions/Recipes'
+        "404":
+          description: Recipe not found.
+    put:
+      description: Update an existing `Recipe` information.
+      tags:
+        - Recipes
+        - Users
+        - Admin
+      parameters:
+        - $ref: '#/parameters/recipe-id'
+      responses:
+        '200':
+          description: 'Informations updated.'
+        "404":
+          description: Recipe not found.
+
+    delete:
+      summary: Delete a `Recipe`
+      tags:
+        - Recipes
+        - Admin
+      parameters:
+        - $ref: '#/parameters/recipe-id'
+      responses:
+        '200':
+          description: 'Recipe deleted.' 
+        "404":
+          description: Recipe not found.
+
+  /recipes/findByCategories:
+    get:
+      tags:
+        - Recipes
+        - Categories
+      summary: Find a Recipe acording predetermined categories. 
+      parameters:
+        - in: query
+          name: category
+          description: Categories that need to be considered for filter
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        "200":
+          description: Successful
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Recipes"
+  /users:
+    post:
+      tags:
+        - Users
+        - Admin
+      summary: Include a new user
+      description: This can only be done by the logged in user.
+      parameters:
+        - in: body
+          name: new_user
+          description: Created a new user object
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: successful operation.
+          
+  /users/{user_id}:
+    get:
+      summary: |
+        Returns an User based on a single ID.
+      parameters:
+        - $ref: '#/parameters/user-id'
+      tags:
+        - Users
+        - Admin
+      responses:
+        200:
+          description: Successful
+          schema:
+            title: ArrayOfUsers
+            type: object
+            properties:
+                data:
+                  $ref: '#/definitions/User'
+        "404":
+          description: User not found.
+    put:
+      description: Update an existing `User` information.
+      tags:
+        - Users
+        - Admin
+      parameters:
+        - $ref: '#/parameters/user-id'
+      responses:
+        '200':
+          description: 'Informations updated.'
+        "404":
+          description: User not found.  
+    delete:
+      summary: Delete a `User`
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/parameters/user-id'
+      responses:
+        '200':
+          description: 'User deleted.' 
+        "404":
+          description: User not found.
+  
+  /admin/{admin_id}:
+    put:
+      description: Update an existing Adminstrator information.
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/parameters/admin-id'
+      responses:
+        '200':
+          description: 'Informations updated.'
+          schema:
+              properties:
+                data:
+                  $ref: '#/definitions/Admin'
+
+###########################################################################                                Definitions           
+########################################################################### 
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      name:
+        type: string
+      date:
+        type: string
+        format: date
+      password:
+        type: string
+      email:
+        type: string
+      family_name:
+        type: string
+        
+  Recipes:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      title:
+        type: string
+      cod_family_name:
+        type: string
+      txt_recipe:
+        type: string
+      categories:
+        type: string
+      nationality:
+        type: string
+      difficulty:
+        type: integer 
+        
+  Admin:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      name:
+        type: string
+      date:
+        type: string
+        format: date
+      password:
+        type: string
+      email:
+        type: string
+      family_name:
+        type: string
