@@ -1,20 +1,40 @@
 ﻿<?php
-include_once ('../sisref/model/request.php');
-include_once ('../sisref/database/db_manager.php');
+include_once('../sisref/model/request.php');
+include_once('../sisref/dataBase/db_manager.php');
 
 class ResourceController
-{    
-    private $METHODMAP = ['GET' => 'search' , 'POST' => 'create' , 'PUT' => 'update', 'DELETE' => 'remove' ];
-    
-    public function treat_request($request) {
-        return $this->{$this->METHODMAP[$request->getMethod()]}($request);
-    
-    }
-	private function search($request) {
-		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::queryParams($request->getParameters());
-		return $query; 
-	}
+{	
+ 	private $METHODMAP = ['GET' => 'search' , 'POST' => 'create' , 'PUT' => 'update', 'DELETE' => 'remove' ];
 	
+	public function treat_request($request) {
+		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
+	
+	}
+	private function search($request) {
+		$query = 'SELECT * FROM '.$request->getResource();
+		if($request->getParameters() != null){
+			$query.=' WHERE '.self::queryParams($request->getParameters());
+		}
+		return self::select($query);  
+	}
+	private function select($query){
+		$connect = (new DBConnector())->query($query);
+		return $connect->fetchAll();
+	}
+		
+	private function queryParams($params) {
+		$query = "";		
+		foreach($params as $key => $value) {
+			$query .= $key;
+			if(is_numeric($value)){
+				$query .=" = '".$value."'"." AND ";
+			}else{
+				$query .=" LIKE '%".$value."%'"." AND ";
+			}
+		}
+		$query = substr($query,0,-5);
+		return $query;
+	}
 	private function create($request) {
 		$body = $request->getBody();
 		$resource = $request->getResource();
@@ -32,8 +52,7 @@ class ResourceController
 		return $query;
         }
 	
-	private function getUpdateCriteria($json)
-	{
+	private function getUpdateCriteria($json){
 		$criteria = "";
 		$where = " WHERE ";
 		$array = json_decode($json, true);
@@ -43,29 +62,29 @@ class ResourceController
 			
 		}
 		return substr($criteria, 0, -1).$where." id = ".$array['id'];
-	}	
-	private function getColumns($json) 
-	{
+	}
+	
+	private function getColumns($json){
 		$array = json_decode($json, true);
 		$keys = array_keys($array);
 		return implode(",", $keys);
 	
 	}
-	private function getValues($json) 
-        {
+	private function getValues($json){
                 $array = json_decode($json, true);
                 $keys = array_values($array);
                 $string =  implode("','", $keys);
 		return "'".$string."'";
         
-        }
-		
-	private function queryParams($params) {
+    }
+	private function queryParamsByString($params) {
 		$query = "";		
 		foreach($params as $key => $value) {
-			$query .= $key.' = '.$value.' AND ';	
+			$query .= $key." = '%".$value."%'"." AND ";	
 		}
+		var_dump(substr($query,0,-5));
 		$query = substr($query,0,-5);
 		return $query;
-	}		
+	}
+	
 }
