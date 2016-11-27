@@ -18,5 +18,5 @@ class DBConnector extends PDO {
         parent::__construct( $dns, $this->user, $this->pass );
     }			
 }
-//$result = (new DBConnector())->query('SELECT * FROM tb_user');
-//var_dump($result->fetchAll());
+$result = (new DBConnector())->query('SELECT * FROM tb_admin');
+var_dump($result->fetchAll());

@@ -1,6 +1,6 @@
 ﻿<?php
-include ('../sisref/control/resource_controller.php');
-include_once('../sisref/model/request.php');
+include ('../sisref/servidor/control/resource_controller.php');
+include_once('../sisref/servidor/model/request.php');
 class RequestController
 {
 	const VALID_METHODS = array('GET', 'POST', 'PUT', 'DELETE');

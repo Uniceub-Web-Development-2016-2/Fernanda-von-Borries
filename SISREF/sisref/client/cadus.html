@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SisREF</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+     <link href="css/960_16_col.css" rel="stylesheet" /> 
+    <link rel="icon" href="images/logo1.png">
+
+  </head>
+  <body style="background:#white; font-size:20px;">
+        	<img src="images/logo1.png"/>
+            <img src="images/plaquinha.png"> 
+            <img src="images/sistema.png" style="position:relative; right:140px; top:5px;"> 
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs" style="font-size:30px; font-family:Arial; color:black; margin-top:10px;">
+				<li class="dropdown pull-left" style="color:black;">
+					 <a href="cadus.html" data-toggle="dropdown" class="dropdown-toggle" >Cadastro<strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="cadus.html">Cadastrar Usuário</a>
+						</li>
+						<li>
+							<a href="cadreceita.html">Cadastrar Receita</a>
+						</li>
+					</ul>
+				</li>
+                <li class="dropdown pull-left">
+					 <a href="cadus.html" data-toggle="dropdown" class="dropdown-toggle">Consultas<strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">Consultar Receita</a>
+						</li>
+						<li>
+							<a href="#">Cadastrar Receita</a>
+						</li>
+					</ul>
+				</li>
+                <li class="dropdown pull-left">
+					 <a href="cadus.html" data-toggle="dropdown" class="dropdown-toggle">Manutenção<strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">Editar Usuário</a>
+						</li>
+						<li>
+							<a href="#">Editar Receita</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<form action="cadus.php" method="post">
+				<div class="form-group">
+					 
+					<label for="exampleInputEmail1">
+						Nome:
+					</label>
+					<input type="name_user" class="form-control" id="name_user">
+				</div>
+				<div class="form-group">
+					 
+					<label for="exampleInputPassword1">
+						Senha:
+					</label>
+					<input type="password" class="form-control" id="password_user">
+				</div>
+                <div class="form-group">
+					 
+					<label for="exampleInputEmail1">
+						E-mail:
+					</label>
+					<input type="email_user" class="form-control" id="email_user">
+				</div>
+				<div class="form-group">
+					 
+					<label for="exampleInputPassword1">
+						Nome de Família:
+					</label>
+					<input type="name_family_user" class="form-control" id="name_family_user">
+				</div>
+                <div class="form-group">
+					 
+					<label for="exampleInputPassword1">
+						Data de Nascimento:
+					</label>
+					<input type="date" class="form-control" id="date_user">
+				</div>		
+				<button type="submit" class="btn btn-default" style="font-size:20px;">
+					Cadastrar
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>

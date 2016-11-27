@@ -1,14 +1,24 @@
 ﻿<?php
-include_once('../sisref/model/request.php');
+include_once('../sisref/servidor/model/request.php');
 include_once('../sisref/dataBase/db_manager.php');
-
 class ResourceController
 {	
  	private $METHODMAP = ['GET' => 'search' , 'POST' => 'create' , 'PUT' => 'update', 'DELETE' => 'remove' ];
 	
 	public function treat_request($request) {
+		if($request->getMethod() == "POST" && $request->getOperation() == "login")
+		{
+			return $this->login($request);
+		}
 		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
 	
+	}
+
+	public function login($request) {
+		$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::bodyParams($request->getBody());
+		$result = (new DBConnector())->query($query); 
+                return $result->fetchAll(PDO::FETCH_ASSOC);
+		
 	}
 	private function search($request) {
 		$query = 'SELECT * FROM '.$request->getResource();
@@ -47,8 +57,6 @@ class ResourceController
                 $body = $request->getBody();
                 $resource = $request->getResource();
                 $query = 'UPDATE '.$resource.' SET '. $this->getUpdateCriteria($body);
-                var_dump($query);
-		die();
 		return $query;
         }
 	
@@ -85,6 +93,18 @@ class ResourceController
 		var_dump(substr($query,0,-5));
 		$query = substr($query,0,-5);
 		return $query;
+	}
+	
+		private function bodyParams($json) {
+		$criteria = "";
+                $array = json_decode($json, true);
+                foreach($array as $key => $value) {
+                                $criteria .= $key." = '".$value."' AND ";
+                 
+                }
+                return substr($criteria, 0, -5);
+	
+		
 	}
 	
 }
